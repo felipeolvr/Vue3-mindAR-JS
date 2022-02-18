@@ -1,50 +1,205 @@
-<script setup>  
-  import { ref, defineExpose } from 'vue'
+<script setup>
+import { ref, defineExpose } from "vue";
 
-  const sceneRef = ref(null)
-  defineExpose({ sceneRef })
+const sceneRef = ref(null);
+defineExpose({ sceneRef });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const list = ["glasses1", "glasses2", "glasses3", "hat1", "hat2", "earring"];
+  const visibles = [true, false, false, false, true, true];
+  const setVisible = (button, entities, visible) => {
+    if (visible) {
+      button.classList.add("selected");
+    } else {
+      button.classList.remove("selected");
+    }
+    entities.forEach((entity) => {
+      entity.setAttribute("visible", visible);
+    });
+  };
+  list.forEach((item, index) => {
+    const button = document.querySelector("#" + item);
+    const entities = document.querySelectorAll("." + item + "-entity");
+    setVisible(button, entities, visibles[index]);
+    button.addEventListener("click", () => {
+      visibles[index] = !visibles[index];
+      setVisible(button, entities, visibles[index]);
+    });
+  });
+});
 </script>
 
 <template>
-  <a-scene
-    ref="sceneRef"
-    mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/examples/image-tracking/assets/card-example/card.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no;"
-    color-space="sRGB"
-    embedded
-    renderer="colorManagement: true, physicallyCorrectLights"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-  >
-    <a-assets>
+  <div class="example-container">
+    <div class="options-panel">
       <img
-        id="card"
-        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/examples/image-tracking/assets/card-example/card.png"
-        crossorigin="anonymous"
+        id="hat1"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/hat/thumbnail.png"
       />
-      <a-asset-item
-        id="avatarModel"
-        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.0.0/examples/image-tracking/assets/card-example/softmind/scene.gltf"
-        crossorigin
-      ></a-asset-item>
-    </a-assets>
+      <img
+        id="hat2"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/hat2/thumbnail.png"
+      />
+      <img
+        id="glasses1"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/glasses/thumbnail.png"
+      />
+      <img
+        id="glasses2"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/glasses2/thumbnail.png"
+      />
+      <img
+        id="glasses3"
+        src="https://imagensemoldes.com.br/wp-content/uploads/2020/06/%C3%93culos-Thug-Life-PNG-1024x576.png"
+      />
+      <img
+        id="earring"
+        src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/earring/thumbnail.png"
+      />
+    </div>
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-plane
-        src="#card"
-        position="0 0 0"
-        height="0.552"
-        width="1"
-        rotation="0 0 0"
-      ></a-plane>
-      <a-gltf-model
-        rotation="0 0 0 "
-        position="0 0 0.1"
-        scale="0.005 0.005 0.005"
-        src="#avatarModel"
-        animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-      ></a-gltf-model>
-    </a-entity>
-  </a-scene>
+    <a-scene
+      ref="sceneRef"
+      mindar-face
+      embedded
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets>
+        <a-asset-item
+          id="headModel"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/sparkar/headOccluder.glb"
+        ></a-asset-item>
+        <a-asset-item
+          id="glassesModel"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/glasses/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="glassesModel2"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/glasses2/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="glassesModel3"
+          src="../assets/thug-life.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="hatModel"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/hat/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="hatModel2"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/hat2/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="earringModel"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/face-tracking/assets/earring/scene.gltf"
+        ></a-asset-item>
+      </a-assets>
+      <a-camera active="false" position="0 0 0"></a-camera>
+      <!-- head occluder -->
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-gltf-model
+          mindar-face-occluder
+          position="0 -0.3 0.15"
+          rotation="0 0 0"
+          scale="0.065 0.065 0.065"
+          src="#headModel"
+        ></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-gltf-model
+          rotation="0 -0 0"
+          position="0 1.0 -0.5"
+          scale="0.35 0.35 0.35"
+          src="#hatModel"
+          class="hat1-entity"
+          visible="false"
+        ></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-gltf-model
+          rotation="0 -0 0"
+          position="0 -0.2 -0.5"
+          scale="0.008 0.008 0.008"
+          src="#hatModel2"
+          class="hat2-entity"
+          visible="false"
+        ></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-gltf-model
+          rotation="0 -0 0"
+          position="0 0 0"
+          scale="0.01 0.01 0.01"
+          src="#glassesModel"
+          class="glasses1-entity"
+          visible="false"
+        ></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 168">
+        <a-gltf-model
+          rotation="0 -90 0"
+          position="0 -0.3 0"
+          scale="0.6 0.6 0.6"
+          src="#glassesModel2"
+          class="glasses2-entity"
+          visible="false"
+        ></a-gltf-model>
+        <a-gltf-model
+          rotation="0 -90 0"
+          position="0 -0.3 0"
+          scale="0.6 0.6 0.6"
+          src="#glassesModel3"
+          class="glasses3-entity"
+          visible="false"
+        ></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 127">
+        <a-gltf-model
+          rotation="-0.1 -0 0"
+          position="0 -0.3 -0.3"
+          scale="0.05 0.05 0.05"
+          src="#earringModel"
+          class="earring-entity"
+          visible="false"
+        ></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-face-target="anchorIndex: 356">
+        <a-gltf-model
+          rotation="0.1 -0 0"
+          position="0 -0.3 -0.3"
+          scale="0.05 0.05 0.05"
+          src="#earringModel"
+          class="earring-entity"
+          visible="false"
+        ></a-gltf-model>
+      </a-entity>
+    </a-scene>
+  </div>
 </template>
+<style>
+.example-container {
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.options-panel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+.options-panel img {
+  border: solid 2px;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  cursor: pointer;
+}
+.options-panel img.selected {
+  border-color: green;
+}
+</style>
