@@ -14,7 +14,7 @@ yarn install or npm install
 ```
 
 ```
-yarn serve ou npm run serve
+yarn serve or npm run serve
 ```
 
 ### Customize configuration
