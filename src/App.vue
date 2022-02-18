@@ -1,37 +1,23 @@
 <script setup>
-  import 'mind-ar/dist/mindar-image.prod.js'
-  import 'aframe'
-  import 'mind-ar/dist/mindar-image-aframe.prod.js'
-  import MindarViewer from './components/MindarViewer.vue'
-  import { ref } from 'vue'
+import "mind-ar/dist/mindar-image.prod.js";
+import "aframe";
+import "mind-ar/dist/mindar-image-aframe.prod.js";
+import "mind-ar/dist/mindar-face.prod.js";
+import "mind-ar/dist/mindar-face-aframe.prod.js";
+import "mind-ar/dist/mindar-face-three.prod.js";
 
-  const mindarViewerRef = ref(null)
-  const title = ref('START')
+import MindarViewer from "./components/MindarViewer.vue";
+import { ref } from "vue";
 
-  function handleARSystems() {    
-    const sceneEl = mindarViewerRef.value.sceneRef
-    const arSystem = sceneEl.systems['mindar-image-system']
-    if(title.value == 'START') {
-      arSystem.start()
-      title.value = 'STOP'
-    } else {
-      arSystem.stop()
-      title.value = 'START'
-    }
-
-  }
+const mindarViewerRef = ref(null);
 </script>
 
 <template>
   <div class="app">
     <h1>
-      Example Vue 3 with
+      Vue 3 com
       <a href="https://github.com/hiukim/mind-ar-js" target="_blank">MindAR</a>
     </h1>
-
-    <div>
-      <button @click="handleARSystems()">{{ title }}</button>
-    </div>
 
     <div class="container">
       <mindar-viewer ref="mindarViewerRef" />
